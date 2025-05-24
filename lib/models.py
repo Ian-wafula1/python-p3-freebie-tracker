@@ -64,11 +64,9 @@ class Freebie(Base):
     received_at = Column(DateTime(), server_default=func.now())
     company_id = Column(Integer(), ForeignKey('companies.id'))
     dev_id = Column(Integer(), ForeignKey('devs.id'))
-    event_id = Column(Integer(), ForeignKey('events.id'))
     
     company = relationship('Company', back_populates='freebies')
     dev = relationship('Dev', back_populates='freebies')
-    event = relationship('Event', back_populates='freebies')
     
     def __repr__(self):
         return f"<Freebie {self.id}: {self.name}, Category: {self.category}, Received at: {self.received_at}>"
@@ -83,7 +81,6 @@ class Event(Base):
     location = Column(String())
     date_held = Column(DateTime(), server_default=func.now())
     
-    freebies = relationship('Freebie', back_populates='event')
     companies = relationship('Company', back_populates='events', secondary=company_event)
     devs = relationship('Dev', back_populates='events', secondary=dev_event)
     

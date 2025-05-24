@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Column, Integer, String, MetaData, DateTime, Table
+from sqlalchemy import ForeignKey, Column, Integer, String, MetaData, DateTime, Table, func
 from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
@@ -61,7 +61,7 @@ class Freebie(Base):
     name = Column(String())
     category = Column(String())
     description = Column(String())
-    received_at = Column(DateTime(), default=datetime.now)
+    received_at = Column(DateTime(), server_default=func.now())
     company_id = Column(Integer(), ForeignKey('companies.id'))
     dev_id = Column(Integer(), ForeignKey('devs.id'))
     event_id = Column(Integer(), ForeignKey('events.id'))
@@ -81,7 +81,7 @@ class Event(Base):
     organiser = Column(String())
     theme = Column(String())
     location = Column(String())
-    date_held = Column(DateTime(), default=datetime.now)
+    date_held = Column(DateTime(), server_default=func.now())
     
     freebies = relationship('Freebie', back_populates='event')
     companies = relationship('Company', back_populates='events', secondary=company_event)

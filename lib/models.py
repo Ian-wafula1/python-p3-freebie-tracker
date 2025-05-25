@@ -66,7 +66,7 @@ class Dev(Base):
     companies = association_proxy('freebies', 'company', creator = lambda co: Freebie(company = co))
     
     def received_one(self, item_name, session):
-        return bool(session.query(Freebie).filter_by(name=item_name))
+        return bool(session.query(Freebie).filter_by(name=item_name).first())
     
     def give_away(self,dev, freebie, session):
         if freebie in self.freebies:

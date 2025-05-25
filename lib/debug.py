@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
-
+import random
 from models import Company, Dev, Freebie, Event
 
 if __name__ == '__main__':
@@ -86,5 +86,39 @@ if __name__ == '__main__':
     print('Freebies handed out:')
     for freebie in event.freebies(session):
         print(freebie.name, end=', ')
-        
+    
+    print('\n\n')
+    
+    
+    
+    
+    print('================================ Aggregate methods ================================', end='\n\n')
+    
+    print(f"Freebie details: {freebie.print_details()}", end='\n\n')
+    
+    print('Giving freebie to a dev.')
+    new_freebie= company.give_freebie(dev, 'Playstation 5', 500, session)
+    print(f"Owner: {session.query(Freebie).filter(Freebie.id == new_freebie.id).first().dev.name}")
+    print()
+    
+    oldest_company = Company.oldest_company(session)
+    print(f"The oldest company is {oldest_company.name} that was founded in {oldest_company.founding_year}")
+    print()
+    
+    print(f'{dev.name} received:')
+    print(f"    Water Bottle: {dev.received_one('Water Bottle', session)}")
+    print(f"    Playstation 5: {dev.received_one('Playstation 5', session)}")
+    print(f"    Keyboard: {dev.received_one('Keyboard', session)}")
+    print(f"    Poop: {dev.received_one('Poop', session)}")
+    print('\n')
+    
+    print('Giving away a freebie')
+    freebie_given = session.query(Freebie).filter(Freebie.name.like('%Playstation 5%')).first()
+    receiving_dev = random.choice(session.query(Dev).limit(30).all())
+    old_dev = freebie_given.dev
+    
+    print(f"Old Dev: {freebie_given.dev}")
+    old_dev.give_away(receiving_dev, freebie_given, session)
+    print(f"New Dev: {freebie_given.dev}")
+    
     import ipdb; ipdb.set_trace()

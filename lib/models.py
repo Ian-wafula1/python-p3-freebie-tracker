@@ -44,7 +44,12 @@ class Company(Base):
         return oldest if oldest else None
     
     def give_freebie(self, dev, item_name, value, session):
-        freebie = Freebie(name=item_name, value=value, company_id = self.id, dev_id=dev.id)
+        freebie = Freebie(
+            name=item_name,
+            value=value,
+            company_id = self.id,
+            dev_id=dev.id
+        )
         session.add(freebie)
         session.commit()
         return freebie
@@ -73,6 +78,7 @@ class Dev(Base):
             freebie.dev_id = dev.id
             session.commit()
             return 'Freebie given away successfully'
+        
         return 'Freebie not found in this developer\'s freebies'
 
     def __repr__(self):
@@ -86,6 +92,7 @@ class Freebie(Base):
     value = Column(Integer())
     description = Column(String())
     received_at = Column(DateTime(), server_default=func.now())
+    
     company_id = Column(Integer(), ForeignKey('companies.id'))
     dev_id = Column(Integer(), ForeignKey('devs.id'))
     
@@ -96,7 +103,7 @@ class Freebie(Base):
         return session.query(Event).filter(Event.companies.any(id=self.company_id)).first()
     
     def print_details(self):
-        return f"{self.dev} owns a {self.name} from {self.company}"
+        return f"{self.dev.name} owns a {self.name} from {self.company.name}"
     
     def __repr__(self):
         return f"<Freebie {self.id}: {self.name}, Value: ${self.value}>"

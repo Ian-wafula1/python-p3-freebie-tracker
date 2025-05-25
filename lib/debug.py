@@ -12,12 +12,25 @@ if __name__ == '__main__':
     
     freebie = session.query(Freebie).first()
     dev = session.query(Dev).first()
-    company = freebie.company
-    freebie.dev_id = dev.id
+    company = session.query(Company).first()
+    event = session.query(Event).first()
+    print('======== Freebies ========')
     print(freebie.dev)
-    print(freebie.company)
+    print(freebie.company, end='\n\n\n')
+    
+    print('======== Company ========')
     print(company.freebies)
-    print(dev.freebies)
     print(company.devs)
+    print(company.events, end='\n\n\n')
+    
+    print('======== Dev ========')
+    print(dev.freebies)
     print(dev.companies)
+    print(dev.events, end='\n\n\n')
+    
+    print('======== Event ========') 
+    print(event.companies)
+    print(event.devs)
+    print(event.freebies(session))
+    
     import ipdb; ipdb.set_trace()

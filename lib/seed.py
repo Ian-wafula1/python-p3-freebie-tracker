@@ -14,6 +14,14 @@ if __name__ == '__main__':
     Session= sessionmaker(bind=engine)
     session = Session()
     
+    sql = """
+        DELETE FROM dev_event;
+        DELETE FROM company_event;
+    """
+    session.execute('DELETE FROM dev_event;')
+    session.execute('DELETE FROM company_event;')
+    session.commit()
+    
     session.query(Company).delete()
     session.query(Event).delete()
     session.query(Dev).delete()
@@ -28,18 +36,44 @@ if __name__ == '__main__':
     session.add_all(devs)
     session.commit()
     
-    events = [Event(name=name, organiser = fake.company(), location=', '.join(fake.location_on_land()[-1].split('/')), theme = fake.catch_phrase(), date_held=fake.date_time_this_decade()) for name in data["tech_events"]]
+    events = []
     
+    for name in data["tech_events"]:
+        event = Event(
+            name = name,
+            organiser = fake.company(), 
+            location = ', '.join(fake.location_on_land()[-1].split('/')),
+            theme = fake.catch_phrase(),
+            date_held = fake.date_time_this_decade()
+        )
+        
+        event.devs = random.sample(devs, random.randint(30, 75))
+        event.companies = random.sample(companies, random.randint(1, 5))
+        # event.add_devs(event_devs, session)
+            
+        events.append(event)
     session.add_all(events)
     session.commit()
     
     freebies = []
     for company in companies:
         for i in range(random.randint(5, 20)):
-            freebie_name, category = random.choice(data['freebies'])
-            freebie = Freebie(name=freebie_name, category=category, received_at= datetime.now(),  description=fake.text(max_nb_chars=100),company_id = company.id )
+            freebie_name = random.choice(data['freebies'])
+            freebie = Freebie(
+                name=freebie_name, 
+                received_at= datetime.now(), 
+                value= random.randint(5,30), 
+                description=fake.text(max_nb_chars=100),
+                company_id = company.id,
+                dev_id = random.choice(devs).id)
             freebies.append(freebie)
             
     session.add_all(freebies)
     session.commit()
+    
+    # session.query(Company).delete()
+    # session.query(Event).delete()
+    # session.query(Dev).delete()
+    # session.query(Freebie).delete()
+    # session.commit()
         

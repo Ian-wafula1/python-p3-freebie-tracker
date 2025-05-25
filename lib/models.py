@@ -1,7 +1,8 @@
 from sqlalchemy import ForeignKey, Column, Integer, String, MetaData, DateTime, Table, func
 from datetime import datetime
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.associationproxy import association_proxy
 
 convention = {
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -35,6 +36,7 @@ class Company(Base):
     
     freebies = relationship('Freebie', back_populates='company', cascade='save-update, merge')
     events = relationship('Event', back_populates='companies', secondary=company_event)
+    devs = association_proxy('freebies', 'dev', creator = lambda dv: Freebie(dev=dv))
 
     def __repr__(self):
         return f'<Company {self.id}: {self.name}>'
@@ -50,6 +52,7 @@ class Dev(Base):
     
     freebies = relationship('Freebie', back_populates='dev', cascade='save-update, merge')
     events = relationship('Event', back_populates='devs', secondary=dev_event)
+    companies = association_proxy('freebies', 'company', creator = lambda co: Freebie(company = co))
 
     def __repr__(self):
         return f'<Dev {self.id}: {self.name}>, {self.role}'
@@ -86,3 +89,5 @@ class Event(Base):
     
     def __repr__(self):
         return f"<Event {self.id}: {self.name}>"
+    
+    # aggregate methods

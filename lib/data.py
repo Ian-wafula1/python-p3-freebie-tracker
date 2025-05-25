@@ -28,11 +28,10 @@ data = {
         ("Screen Protector", "Phone Accessory"), ("Tote Bag", "Accessories"), ("Travel Mug", "Drinkware"),
         ("Magnetic Bookmark", "Stationery"), ("Glasses Cleaner", "Accessories"), ("Notepad", "Stationery"),
         ("Multitool Card", "Gadget"), ("Cable Clip", "Accessories"), ("Badge Reel", "Accessories")
-    ]
-,
+    ],
     "tech_events": [
         "Google I/O", "Apple WWDC", "Microsoft Build", "AWS re:Invent", "CES",
         "TechCrunch Disrupt", "Facebook F8", "Oracle OpenWorld", "SXSW Interactive",
         "GitHub Universe", "DockerCon", "PyCon", "DEF CON", "Google Cloud Next", "WWDC",
     ]
-    }
+}

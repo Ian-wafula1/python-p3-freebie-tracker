@@ -28,20 +28,7 @@ if __name__ == '__main__':
     session.add_all(devs)
     session.commit()
     
-    # events = [Event(name=data["tech_events"][i], location=fake.location_on_land(), date_held=fake.date_time_this_decade()) for i in range(len(data["tech_events"]))]
-    # session.add_all(events)
-    # session.commit()
-    
     events = [Event(name=name, organiser = fake.company(), location=', '.join(fake.location_on_land()[-1].split('/')), theme = fake.catch_phrase(), date_held=fake.date_time_this_decade()) for name in data["tech_events"]]
-    # events = []
-    # for event_name in data["tech_events"]:
-    #     event = Event(name = event_name,
-    #                   organiser = fake.company(),
-    #                   theme = fake.catch_phrase(), 
-    #                   location = fake.location_on_land(),
-    #                   date_held = fake.date_time_this_decade()
-    #     )
-    #     events.append(event)
     
     session.add_all(events)
     session.commit()

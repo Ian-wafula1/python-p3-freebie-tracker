@@ -3,6 +3,7 @@
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 import random
+from seed import seed
 from models import Company, Dev, Freebie, Event
 
 if __name__ == '__main__':
@@ -10,6 +11,7 @@ if __name__ == '__main__':
     engine = create_engine('sqlite:///freebies.db')
     Session = sessionmaker(bind=engine)
     session = Session()
+    seed()
     
     freebie = session.query(Freebie).first()
     dev = session.query(Dev).first()
@@ -105,9 +107,6 @@ if __name__ == '__main__':
     print('================================ Aggregate methods ================================', end='\n\n')
     
     print(f"Freebie details: {freebie.print_details()}", end='\n\n')
-    
-    # Delete playstation rows if they are present
-    session.query(Freebie).filter(Freebie.name == 'Playstation 5').delete()
     
     print('Giving freebie to a dev.')
     new_freebie= company.give_freebie(dev, 'Playstation 5', 500, session)

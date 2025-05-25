@@ -9,7 +9,7 @@ from data import data
 
 fake = Faker()
 
-if __name__ == '__main__':
+def seed():
     engine = create_engine('sqlite:///freebies.db')
     Session= sessionmaker(bind=engine)
     session = Session()
@@ -86,3 +86,9 @@ if __name__ == '__main__':
     session.add_all(freebies)
     session.commit()
     
+    session.close()
+    
+if __name__ == '__main__':
+    print('Seeding database...')
+    seed()
+    print('Seeding complete')

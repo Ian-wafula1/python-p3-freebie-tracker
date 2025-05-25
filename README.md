@@ -20,6 +20,9 @@ Track and manage all the awesome tech swag (aka freebies) developers collect at 
 - Alembic for migrations
 - Spotify (for REAL vibe coding 😎🎵)
 
+## Entity Relationship Diagram
+![Entity Relationship Diagram](image.png)
+
 ## 🧮 Models
 
 ### `Dev`

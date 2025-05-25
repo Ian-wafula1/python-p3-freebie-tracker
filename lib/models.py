@@ -92,6 +92,9 @@ class Freebie(Base):
     company = relationship('Company', back_populates='freebies')
     dev = relationship('Dev', back_populates='freebies')
     
+    def event(self, session):
+        return session.query(Event).filter(Event.companies.any(id=self.company_id)).first()
+    
     def print_details(self):
         return f"{self.dev} owns a {self.name} from {self.company}"
     

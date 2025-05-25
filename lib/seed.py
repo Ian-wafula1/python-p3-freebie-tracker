@@ -18,14 +18,13 @@ if __name__ == '__main__':
         DELETE FROM dev_event;
         DELETE FROM company_event;
     """
-    session.execute('DELETE FROM dev_event;')
-    session.execute('DELETE FROM company_event;')
-    session.commit()
     
     session.query(Company).delete()
     session.query(Event).delete()
     session.query(Dev).delete()
     session.query(Freebie).delete()
+    session.execute('DELETE FROM dev_event;')
+    session.execute('DELETE FROM company_event;')
     session.commit()
     
     companies  = [Company(name=fake.company(),  founding_year=random.randint(1980, 2025), industry=random.choice(data["tech_industries"])) for _ in range(30)]
@@ -49,7 +48,6 @@ if __name__ == '__main__':
         
         event.devs = random.sample(devs, random.randint(30, 75))
         event.companies = random.sample(companies, random.randint(1, 5))
-        # event.add_devs(event_devs, session)
             
         events.append(event)
     session.add_all(events)

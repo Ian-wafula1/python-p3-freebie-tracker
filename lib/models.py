@@ -14,16 +14,16 @@ Base = declarative_base(metadata=metadata)
 dev_event = Table(
     'dev_event',
     Base.metadata,
-    Column('dev_id', Integer, ForeignKey('devs.id', ondelete='CASCADE'), primary_key=True),
-    Column('event_id', Integer, ForeignKey('events.id', ondelete='CASCADE'), primary_key=True),
+    Column('dev_id', Integer, ForeignKey('devs.id'), primary_key=True),
+    Column('event_id', Integer, ForeignKey('events.id'), primary_key=True),
     extend_existing=True
 )
 
 company_event = Table(
     'company_event',
     Base.metadata,
-    Column('company_id', Integer, ForeignKey('companies.id', ondelete='CASCADE'), primary_key=True),
-    Column('event_id', Integer, ForeignKey('events.id', ondelete='CASCADE'), primary_key=True),
+    Column('company_id', Integer, ForeignKey('companies.id'), primary_key=True),
+    Column('event_id', Integer, ForeignKey('events.id'), primary_key=True),
     extend_existing=True
 )
 class Company(Base):
@@ -35,7 +35,7 @@ class Company(Base):
     industry = Column(String())
     
     freebies = relationship('Freebie', back_populates='company', cascade='save-update, merge')
-    events = relationship('Event', back_populates='companies', secondary=company_event)
+    events = relationship('Event', back_populates='companies', secondary=company_event, passive_deletes=True)
     devs = association_proxy('freebies', 'dev', creator = lambda dv: Freebie(dev=dv))
     
     @classmethod
@@ -112,19 +112,9 @@ class Event(Base):
     devs = relationship('Dev', back_populates='events', secondary=dev_event)
     
     # Returns the freebies given at the event
-    
     def freebies(self, session):
         return session.query(Freebie).filter(Freebie.company.has(Company.events.any(id=self.id))).all()
     
-    def add_devs(self, devs, session):
-        for dev in devs:
-            if dev not in self.devs:
-                self.devs.append(dev)
-            session.commit() 
-        # self.devs.extend(devs)
-        # session.commit()   
-                
     def __repr__(self):
         return f"<Event {self.id}: {self.name}>"
     
-    # aggregate methods

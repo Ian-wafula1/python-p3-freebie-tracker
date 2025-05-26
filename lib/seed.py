@@ -14,14 +14,23 @@ def seed():
     Session= sessionmaker(bind=engine)
     session = Session()
     
+    # Deletes rows in the dev_event table
+    for dev in (devs := session.query(Dev)):
+        dev.events = []
+    session.add_all(devs)
+    session.commit()
+    
+    # Deletes rows in the company_event table
+    for company in (companies := session.query(Company)):
+        company.events = []
+    session.add_all(companies)
+    session.commit()
+    
     session.query(Company).delete()
     session.query(Event).delete()
     session.query(Dev).delete()
     session.query(Freebie).delete()
-    session.execute('DELETE FROM dev_event;')
-    session.execute('DELETE FROM company_event;')
     session.commit()
-    
     
     companies  = [
         Company(
